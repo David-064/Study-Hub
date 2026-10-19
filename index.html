@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Study Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bangers&family=Fredoka:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/x-icon" href="study-hub.ico" />
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <style>
+      :root {
+        --bg: #fff4c2;
+        --ink: #1b1b2f;
+        --card: #ffffff;
+        --muted: #4a4a68;
+        --pink: #ff6b9d;
+        --blue: #4cc9f0;
+        --green: #7bd88f;
+        --orange: #ff9f43;
+        --purple: #a78bfa;
+        --yellow: #ffd93d;
+        box-sizing: border-box;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --bg: #241f3d;
+          --ink: #fff7d6;
+          --card: #34305a;
+          --muted: #cfcaf0;
+        }
+      }
+      :root[data-theme="dark"] {
+        --bg: #241f3d;
+        --ink: #fff7d6;
+        --card: #34305a;
+        --muted: #cfcaf0;
+      }
+      html {
+        scroll-padding-top: env(safe-area-inset-top, 0px);
+        scroll-behavior: smooth;
+      }
+      body {
+        background-color: var(--bg);
+        color: var(--ink);
+        font-family: "Fredoka", "Comic Sans MS", system-ui, sans-serif;
+        background-image: radial-gradient(var(--ink) 1.2px, transparent 1.2px);
+        background-size: 26px 26px;
+        background-position: 0 0;
+      }
+      .dots-fade {
+        background: var(--bg);
+      }
+      .bangers {
+        font-family: "Bangers", "Impact", system-ui, sans-serif;
+        letter-spacing: 0.04em;
+      }
+      .pop {
+        border: 4px solid #1b1b2f;
+        box-shadow: 6px 6px 0 #1b1b2f;
+        border-radius: 22px;
+      }
+      .pop-sm {
+        border: 3px solid #1b1b2f;
+        box-shadow: 4px 4px 0 #1b1b2f;
+        border-radius: 16px;
+      }
+      .press {
+        transition:
+          transform 0.12s,
+          box-shadow 0.12s;
+      }
+      .press:hover {
+        transform: translate(-2px, -2px) rotate(-1deg);
+        box-shadow: 8px 8px 0 #1b1b2f;
+      }
+      .press:active {
+        transform: translate(4px, 4px);
+        box-shadow: 0 0 0 #1b1b2f;
+      }
+      a:focus-visible,
+      button:focus-visible {
+        outline: 4px solid var(--ink);
+        outline-offset: 3px;
+      }
+      .card {
+        background: var(--card);
+        color: var(--ink);
+      }
+      .title-bounce {
+        animation: bounce 1.6s ease-in-out 1;
+      }
+      @keyframes bounce {
+        0% {
+          transform: translateY(-30px) rotate(-4deg);
+          opacity: 0;
+        }
+        60% {
+          transform: translateY(6px) rotate(2deg);
+          opacity: 1;
+        }
+        100% {
+          transform: none;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .title-bounce {
+          animation: none;
+        }
+        html {
+          scroll-behavior: auto;
+        }
+        .press {
+          transition: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="px-4 pt-10 pb-8 text-center">
+      <div
+        class="inline-block pop px-6 py-4 title-bounce"
+        style="
+          background: var(--yellow);
+          color: #1b1b2f;
+          transform: rotate(-2deg);
+        "
+      >
+        <h1 class="bangers text-5xl sm:text-7xl leading-none">Study Hub!</h1>
+      </div>
+      <p class="mt-5 text-lg sm:text-xl font-semibold max-w-xl mx-auto">
+        Semester 2, first term. Pick a course and jump into your Notion notes.
+      </p>
+      <nav
+        id="tiles"
+        class="mt-8 grid grid-cols-2 sm:grid-cols-3 gap-4 max-w-3xl mx-auto"
+        aria-label="Courses"
+      ></nav>
+    </header>
+
+    <main id="courses" class="px-4 pb-16 max-w-5xl mx-auto space-y-10"></main>
+
+    <footer
+      class="px-4 pb-10 text-center font-semibold"
+      style="color: var(--muted)"
+    >
+      Made for studying. Every card opens the page in Notion.
+    </footer>
+
+    <script>
+      const COURSES = [
+        {
+          id: "logic",
+          name: "Logic Design",
+          emoji: "🔌",
+          color: "var(--blue)",
+          url: "https://app.notion.com/p/3f7ac80f8b7e806eb565f83972fb360d",
+          items: [
+            {
+              t: "Logic Design Notes: Lectures 1 and 2",
+              k: "Notes",
+              u: "https://app.notion.com/p/243ac80f8b7e8255a02b01b81f1d2fa3",
+            },
+            {
+              t: "Lecture 3: Boolean Algebra, Part 2",
+              k: "Notes",
+              u: "https://app.notion.com/p/f99ac80f8b7e839387298148f5aba1a6",
+            },
+            {
+              t: "Lecture 4: Karnaugh Maps (K-Map)",
+              k: "Notes",
+              u: "https://app.notion.com/p/89fac80f8b7e83d2b04a8120c9e8d7fd",
+            },
+          ],
+        },
+        {
+          id: "datacom",
+          name: "Data Communication",
+          emoji: "📡",
+          color: "var(--pink)",
+          url: "https://app.notion.com/p/3edac80f8b7e809b8e03c8e9b68306a1",
+          items: [
+            {
+              t: "Study Notes: Lectures 1 and 2",
+              k: "Notes",
+              u: "https://app.notion.com/p/370ac80f8b7e8317ae3c81b41cc63341",
+            },
+            {
+              t: "Study Guide: Lectures 1 and 2 (short version)",
+              k: "Study guide",
+              u: "https://app.notion.com/p/9b5ac80f8b7e827e8c47818d023fa966",
+            },
+            {
+              t: "Study Guide: Lecture 3",
+              k: "Study guide",
+              u: "https://app.notion.com/p/767ac80f8b7e82a785df81b55c98ea2e",
+            },
+            {
+              t: "Sheet 1 Solutions: Bandwidth, Data Rate, Throughput, Total Delay",
+              k: "Sheet",
+              u: "https://app.notion.com/p/3f1ac80f8b7e81a9932cf7eb06771a85",
+            },
+          ],
+        },
+        {
+          id: "sysan",
+          name: "System Analysis",
+          emoji: "🧩",
+          color: "var(--green)",
+          url: "https://app.notion.com/p/3f7ac80f8b7e80838454f1755d473ebb",
+          items: [
+            {
+              t: "System Analysis: Chapters 1 and 2",
+              k: "Notes",
+              u: "https://app.notion.com/p/c23ac80f8b7e83f2b5e98114562e9917",
+            },
+            {
+              t: "System Analysis: Sections 1 and 2",
+              k: "Notes",
+              u: "https://app.notion.com/p/60bac80f8b7e82b1bfca812b5155a6b1",
+            },
+          ],
+        },
+        {
+          id: "db",
+          name: "Database",
+          emoji: "🗄️",
+          color: "var(--orange)",
+          url: "https://app.notion.com/p/3f7ac80f8b7e80d584a0e782967bd8b3",
+          items: [
+            {
+              t: "Lecture 1: Foundations and SQL Intro",
+              k: "Notes",
+              u: "https://app.notion.com/p/3fdac80f8b7e8124a845ddec89dff53f",
+            },
+            {
+              t: "Lecture 2: File Systems vs DBMS and ACID",
+              k: "Notes",
+              u: "https://app.notion.com/p/3fdac80f8b7e816eb444cab527ad56e6",
+            },
+            {
+              t: "Lecture 3: Modern Trends, SQL vs NoSQL",
+              k: "Notes",
+              u: "https://app.notion.com/p/3fdac80f8b7e816e89f2fbc44f8110d0",
+            },
+            {
+              t: "Section 1: Flat Files, RDBMS and SQL Server",
+              k: "Notes",
+              u: "https://app.notion.com/p/3fdac80f8b7e81dabd92d8f952700771",
+            },
+            {
+              t: "Section 2: Database Files and CREATE DATABASE",
+              k: "Notes",
+              u: "https://app.notion.com/p/3fdac80f8b7e8147ba3ceac0a3ca8194",
+            },
+            {
+              t: "Final Revision and Cheat Sheet",
+              k: "Cheat sheet",
+              u: "https://app.notion.com/p/3fdac80f8b7e8159ad6bc5c5806af997",
+            },
+            {
+              t: "Quiz and Answers",
+              k: "Quiz",
+              u: "https://app.notion.com/p/3fdac80f8b7e81139b7ddb4d0e2809a1",
+            },
+          ],
+        },
+        {
+          id: "ds",
+          name: "Data Structure",
+          emoji: "📚",
+          color: "var(--purple)",
+          url: "https://app.notion.com/p/3f7ac80f8b7e80c69f1cd13ba039fc2c",
+          items: [
+            {
+              t: "CS214 Lecture 0 (Overview) and Lecture 2 (Stack)",
+              k: "Notes",
+              u: "https://app.notion.com/p/3abac80f8b7e8362ae2d815e134e6d90",
+            },
+            {
+              t: "CS214 Lecture 3 (Queue)",
+              k: "Notes",
+              u: "https://app.notion.com/p/627ac80f8b7e83e6a06d01e540b6a301",
+            },
+            {
+              t: "CS214 Lecture 4 (Linked Lists)",
+              k: "Notes",
+              u: "https://app.notion.com/p/e2bac80f8b7e82d7a318812cded1e337",
+            },
+          ],
+        },
+        {
+          id: "pl2",
+          name: "PL-2 (Java)",
+          emoji: "☕",
+          color: "var(--yellow)",
+          url: "https://app.notion.com/p/3faac80f8b7e800e8e5fd062413b331e",
+          items: [
+            {
+              t: "Java Chapter 1 Notes",
+              k: "Notes",
+              u: "https://app.notion.com/p/709ac80f8b7e82e28b37017cc4c86d3f",
+            },
+            {
+              t: "Java Chapter 2 Notes",
+              k: "Notes",
+              u: "https://app.notion.com/p/beeac80f8b7e83bc9c2881e4f1c99f1c",
+            },
+            {
+              t: "Java Chapters 1 and 2 Quiz",
+              k: "Quiz",
+              u: "https://app.notion.com/p/c50ac80f8b7e8298b39801d812ab8737",
+            },
+            {
+              t: "Java Chapters 1 and 2 Answer Key",
+              k: "Answer key",
+              u: "https://app.notion.com/p/d19ac80f8b7e822081728153aaf9ed82",
+            },
+          ],
+        },
+      ];
+
+      const tilt = [
+        "-1.5deg",
+        "1.2deg",
+        "-0.8deg",
+        "1.6deg",
+        "-1.1deg",
+        "0.9deg",
+      ];
+      const tiles = document.getElementById("tiles");
+      const main = document.getElementById("courses");
+
+      COURSES.forEach((c, i) => {
+        const a = document.createElement("a");
+        a.href = "#" + c.id;
+        a.className = "pop-sm press block px-3 py-4 text-[#1b1b2f]";
+        a.style.cssText = `background:${c.color};transform:rotate(${tilt[i]})`;
+        a.innerHTML = `<span class="block text-4xl" aria-hidden="true">${c.emoji}</span>
+    <span class="bangers block text-2xl mt-1">${c.name}</span>
+    <span class="block text-sm font-semibold">${c.items.length} ${c.items.length === 1 ? "page" : "pages"}</span>`;
+        tiles.appendChild(a);
+
+        const s = document.createElement("section");
+        s.id = c.id;
+        s.setAttribute("aria-labelledby", c.id + "-h");
+        s.innerHTML = `
+    <div class="pop p-5 sm:p-7" style="background:${c.color}">
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-5 text-[#1b1b2f]">
+        <h2 id="${c.id}-h" class="bangers text-4xl sm:text-5xl"><span aria-hidden="true">${c.emoji}</span> ${c.name}</h2>
+        <a href="${c.url}" target="_blank" rel="noopener noreferrer" class="pop-sm press bg-white text-[#1b1b2f] px-4 py-2 font-bold">Open in Notion</a>
+      </div>
+      <ul class="grid gap-4 sm:grid-cols-2">
+        ${c.items
+          .map(
+            (it) => `
+          <li>
+            <a href="${it.u}" target="_blank" rel="noopener noreferrer" class="card pop-sm press block p-4 h-full">
+              <span class="inline-block text-sm font-bold px-3 py-1 rounded-full border-2 border-[#1b1b2f] text-[#1b1b2f]" style="background:var(--yellow)">${it.k}</span>
+              <span class="block mt-2 text-lg font-semibold leading-snug">${it.t}</span>
+            </a>
+          </li>`,
+          )
+          .join("")}
+      </ul>
+    </div>`;
+        main.appendChild(s);
+      });
+    </script>
+  </body>
+</html>
