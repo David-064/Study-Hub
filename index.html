@@ -6,156 +6,541 @@
       name="viewport"
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
-    <title>Study Hub</title>
-    <link rel="icon" type="image/png" href="notion.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Bangers&family=Fredoka:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
+    <meta name="theme-color" content="#fff5d6" />
+    <meta
+      name="description"
+      content="A playful, searchable study dashboard for your semester notes, quizzes, and revision resources."
     />
-    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <title>Study Hub — Semester 2</title>
+    <link rel="icon" type="image/png" href="notion.png" />
     <style>
       :root {
-        --bg: #fff4c2;
-        --ink: #1b1b2f;
-        --card: #ffffff;
-        --muted: #4a4a68;
-        --pink: #ff6b9d;
-        --blue: #4cc9f0;
-        --green: #7bd88f;
-        --orange: #ff9f43;
-        --purple: #a78bfa;
-        --yellow: #ffd93d;
+        color-scheme: light dark;
+        --bg: #fff5d6;
+        --ink: #17172a;
+        --muted: #55536a;
+        --paper: #fffdf8;
+        --line: #17172a;
+        --accent: #ffcf4a;
+        --shadow: 5px 5px 0 var(--line);
+        --radius: 22px;
+        font-family: ui-rounded, "Trebuchet MS", system-ui, sans-serif;
+      }
+      * {
         box-sizing: border-box;
-        padding-top: env(safe-area-inset-top, 0px);
-        padding-bottom: env(safe-area-inset-bottom, 0px);
-      }
-      @media (prefers-color-scheme: dark) {
-        :root:not([data-theme="light"]) {
-          --bg: #241f3d;
-          --ink: #fff7d6;
-          --card: #34305a;
-          --muted: #cfcaf0;
-        }
-      }
-      :root[data-theme="dark"] {
-        --bg: #241f3d;
-        --ink: #fff7d6;
-        --card: #34305a;
-        --muted: #cfcaf0;
       }
       html {
-        scroll-padding-top: env(safe-area-inset-top, 0px);
         scroll-behavior: smooth;
+        scroll-padding-top: 90px;
       }
       body {
-        background-color: var(--bg);
+        margin: 0;
         color: var(--ink);
-        font-family: "Fredoka", "Comic Sans MS", system-ui, sans-serif;
-        background-image: radial-gradient(var(--ink) 1.2px, transparent 1.2px);
-        background-size: 26px 26px;
-        background-position: 0 0;
+        background-color: var(--bg);
+        background-image: radial-gradient(#17172a18 1px, transparent 1px);
+        background-size: 22px 22px;
+        line-height: 1.5;
       }
-      .dots-fade {
-        background: var(--bg);
+      button,
+      input,
+      select {
+        font: inherit;
       }
-      .bangers {
-        font-family: "Bangers", "Impact", system-ui, sans-serif;
-        letter-spacing: 0.04em;
+      a {
+        color: inherit;
       }
-      .pop {
-        border: 4px solid #1b1b2f;
-        box-shadow: 6px 6px 0 #1b1b2f;
-        border-radius: 22px;
+      button:focus-visible,
+      a:focus-visible,
+      input:focus-visible,
+      select:focus-visible {
+        outline: 3px solid #165ec9;
+        outline-offset: 3px;
       }
-      .pop-sm {
-        border: 3px solid #1b1b2f;
-        box-shadow: 4px 4px 0 #1b1b2f;
-        border-radius: 16px;
+      .skip {
+        position: absolute;
+        left: 12px;
+        top: -60px;
+        background: var(--paper);
+        padding: 10px;
+        z-index: 10;
       }
-      .press {
+      .skip:focus {
+        top: 12px;
+      }
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        background: color-mix(in srgb, var(--bg) 94%, transparent);
+        backdrop-filter: blur(12px);
+        border-bottom: 2px solid var(--line);
+      }
+      .topinner {
+        max-width: 1120px;
+        margin: auto;
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .brand {
+        font-weight: 900;
+        text-decoration: none;
+        letter-spacing: 0.02em;
+      }
+      .top-actions {
+        display: flex;
+        gap: 8px;
+      }
+      .btn,
+      .filter,
+      .searchbox,
+      .selectbox {
+        border: 2px solid var(--line);
+        border-radius: 12px;
+        background: var(--paper);
+        color: var(--ink);
+        padding: 9px 13px;
+      }
+      .btn {
+        cursor: pointer;
+        font-weight: 800;
+        box-shadow: 3px 3px 0 var(--line);
         transition:
           transform 0.12s,
           box-shadow 0.12s;
       }
-      .press:hover {
-        transform: translate(-2px, -2px) rotate(-1deg);
-        box-shadow: 8px 8px 0 #1b1b2f;
+      .btn:hover {
+        transform: translate(-1px, -1px);
+        box-shadow: 4px 4px 0 var(--line);
       }
-      .press:active {
-        transform: translate(4px, 4px);
-        box-shadow: 0 0 0 #1b1b2f;
+      .hero {
+        max-width: 1120px;
+        margin: auto;
+        padding: 42px 20px 26px;
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 24px;
+        align-items: center;
       }
-      a:focus-visible,
-      button:focus-visible {
-        outline: 4px solid var(--ink);
-        outline-offset: 3px;
+      .hero h1 {
+        font-size: clamp(2.8rem, 8vw, 5.5rem);
+        line-height: 0.96;
+        margin: 0 0 16px;
+        letter-spacing: -0.06em;
       }
-      .card {
-        background: var(--card);
-        color: var(--ink);
+      .hero h1 span {
+        display: inline-block;
+        background: #ff6b9d;
+        padding: 0.04em 0.18em 0.13em;
+        border: 3px solid var(--line);
+        border-radius: 14px;
+        box-shadow: var(--shadow);
+        transform: rotate(-2deg);
       }
-      .title-bounce {
-        animation: bounce 1.6s ease-in-out 1;
+      .hero p {
+        font-size: 1.1rem;
+        max-width: 620px;
+        color: var(--muted);
+        margin: 20px 0;
       }
-      @keyframes bounce {
-        0% {
-          transform: translateY(-30px) rotate(-4deg);
-          opacity: 0;
+      .hero-card {
+        background: #4cc9f0;
+        border: 3px solid var(--line);
+        border-radius: var(--radius);
+        padding: 20px;
+        box-shadow: var(--shadow);
+        transform: rotate(1deg);
+      }
+      .hero-card strong {
+        font-size: 1.15rem;
+      }
+      .stats {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 16px;
+      }
+      .stat {
+        background: var(--paper);
+        border: 2px solid var(--line);
+        border-radius: 12px;
+        padding: 7px 11px;
+        font-weight: 800;
+      }
+      .toolbar {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 8px 20px 24px;
+      }
+      .controls {
+        display: grid;
+        grid-template-columns: minmax(220px, 1fr) auto auto;
+        gap: 10px;
+        align-items: center;
+      }
+      .searchbox {
+        width: 100%;
+        padding: 12px 14px;
+      }
+      .filters {
+        display: flex;
+        gap: 8px;
+        overflow: auto;
+        padding: 4px 2px 10px;
+        margin-top: 8px;
+      }
+      .filter {
+        white-space: nowrap;
+        cursor: pointer;
+        font-weight: 800;
+      }
+      .filter[aria-pressed="true"] {
+        background: var(--accent);
+        box-shadow: 3px 3px 0 var(--line);
+      }
+      .course-nav {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 0 20px 28px;
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 12px;
+      }
+      .course-link {
+        --course: #4cc9f0;
+        text-align: center;
+        text-decoration: none;
+        background: var(--course);
+        border: 3px solid var(--line);
+        border-radius: 16px;
+        padding: 12px 8px;
+        box-shadow: 3px 3px 0 var(--line);
+        transition: transform 0.15s;
+      }
+      .course-link:hover {
+        transform: translateY(-3px) rotate(-1deg);
+      }
+      .course-link .emoji {
+        font-size: 1.7rem;
+        display: block;
+      }
+      .course-link .cname {
+        font-weight: 900;
+        display: block;
+        line-height: 1.15;
+      }
+      .course-link small {
+        display: block;
+        margin-top: 5px;
+        font-weight: 700;
+      }
+      .progress-wrap {
+        height: 7px;
+        background: #17172a25;
+        border-radius: 9px;
+        overflow: hidden;
+        margin-top: 8px;
+      }
+      .progress-bar {
+        height: 100%;
+        background: #17172a;
+        border-radius: inherit;
+        transition: width 0.2s;
+      }
+      .main {
+        max-width: 1120px;
+        margin: auto;
+        padding: 0 20px 48px;
+      }
+      .course {
+        --course: #4cc9f0;
+        margin: 0 0 26px;
+        background: var(--course);
+        border: 3px solid var(--line);
+        border-radius: var(--radius);
+        padding: clamp(15px, 3vw, 25px);
+        box-shadow: var(--shadow);
+        scroll-margin-top: 85px;
+      }
+      .course-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 15px;
+      }
+      .course h2 {
+        font-size: clamp(1.7rem, 4vw, 2.5rem);
+        line-height: 1.05;
+        margin: 0;
+        letter-spacing: -0.03em;
+      }
+      .course-meta {
+        font-weight: 800;
+        margin-top: 6px;
+      }
+      .resource-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+      .resource {
+        position: relative;
+        min-height: 125px;
+        background: var(--paper);
+        border: 2px solid var(--line);
+        border-radius: 16px;
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        box-shadow: 3px 3px 0 var(--line);
+      }
+      .res-title {
+        font-weight: 850;
+        line-height: 1.3;
+        padding-right: 34px;
+      }
+      .res-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin-top: auto;
+      }
+      .tag {
+        display: inline-flex;
+        align-self: flex-start;
+        border: 1.5px solid var(--line);
+        border-radius: 999px;
+        background: #ffe77a;
+        padding: 3px 9px;
+        font-size: 0.8rem;
+        font-weight: 850;
+      }
+      .open-link {
+        font-size: 0.9rem;
+        font-weight: 850;
+        text-underline-offset: 3px;
+      }
+      .check {
+        position: absolute;
+        right: 12px;
+        top: 12px;
+        width: 25px;
+        height: 25px;
+        accent-color: #197447;
+        cursor: pointer;
+      }
+      .resource.done .res-title {
+        text-decoration: line-through;
+        opacity: 0.67;
+      }
+      .resource.done {
+        background: color-mix(in srgb, var(--paper) 75%, #7bd88f);
+      }
+      .empty {
+        display: none;
+        padding: 30px;
+        text-align: center;
+        background: var(--paper);
+        border: 2px dashed var(--line);
+        border-radius: 18px;
+      }
+      .empty.show {
+        display: block;
+      }
+      .footer {
+        text-align: center;
+        color: var(--muted);
+        padding: 0 20px 30px;
+      }
+      .toast {
+        position: fixed;
+        left: 50%;
+        bottom: 20px;
+        transform: translate(-50%, 20px);
+        opacity: 0;
+        pointer-events: none;
+        background: var(--ink);
+        color: var(--bg);
+        padding: 10px 16px;
+        border-radius: 12px;
+        transition: 0.2s;
+        z-index: 8;
+      }
+      .toast.show {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          color-scheme: dark;
+          --bg: #211d37;
+          --ink: #fff8df;
+          --muted: #d3cde8;
+          --paper: #322d50;
+          --line: #151225;
+          --shadow: 5px 5px 0 var(--line);
         }
-        60% {
-          transform: translateY(6px) rotate(2deg);
-          opacity: 1;
+      }
+      :root[data-theme="dark"] {
+        color-scheme: dark;
+        --bg: #211d37;
+        --ink: #fff8df;
+        --muted: #d3cde8;
+        --paper: #322d50;
+        --line: #151225;
+        --shadow: 5px 5px 0 var(--line);
+      }
+      :root[data-theme="light"] {
+        color-scheme: light;
+        --bg: #fff5d6;
+        --ink: #17172a;
+        --muted: #55536a;
+        --paper: #fffdf8;
+        --line: #17172a;
+        --shadow: 5px 5px 0 var(--line);
+      }
+      @media (max-width: 760px) {
+        .hero {
+          grid-template-columns: 1fr;
+          padding-top: 30px;
         }
-        100% {
+        .hero-card {
           transform: none;
+        }
+        .course-nav {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        .controls {
+          grid-template-columns: 1fr 1fr;
+        }
+        .searchbox {
+          grid-column: 1/-1;
+        }
+        .course-head {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+        .resource-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 420px) {
+        .topinner {
+          padding-inline: 12px;
+        }
+        .hero,
+        .toolbar,
+        .course-nav,
+        .main {
+          padding-inline: 14px;
+        }
+        .course-nav {
+          gap: 8px;
+        }
+        .course-link {
+          padding: 10px 5px;
+        }
+        .top-actions .btn {
+          padding: 8px 10px;
+        }
+        .hero h1 {
+          font-size: 3.2rem;
         }
       }
       @media (prefers-reduced-motion: reduce) {
-        .title-bounce {
-          animation: none;
-        }
-        html {
-          scroll-behavior: auto;
-        }
-        .press {
-          transition: none;
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+          animation-duration: 0.01ms !important;
+          transition-duration: 0.01ms !important;
         }
       }
     </style>
   </head>
   <body>
-    <header class="px-4 pt-10 pb-8 text-center">
-      <div
-        class="inline-block pop px-6 py-4 title-bounce"
-        style="
-          background: var(--yellow);
-          color: #1b1b2f;
-          transform: rotate(-2deg);
-        "
-      >
-        <h1 class="bangers text-5xl sm:text-7xl leading-none">Study Hub!</h1>
+    <a class="skip" href="#main">Skip to study resources</a>
+    <div class="topbar">
+      <div class="topinner">
+        <a class="brand" href="#top" aria-label="Study Hub home"
+          >📚 Study Hub</a
+        >
+        <div class="top-actions">
+          <button
+            class="btn"
+            id="themeToggle"
+            type="button"
+            aria-label="Switch color theme"
+          >
+            🌙 Theme</button
+          ><button class="btn" id="resetProgress" type="button">
+            Reset progress
+          </button>
+        </div>
       </div>
-      <p class="mt-5 text-lg sm:text-xl font-semibold max-w-xl mx-auto">
-        Semester 2, first term. Pick a course and jump into your Notion notes.
-      </p>
-      <nav
-        id="tiles"
-        class="mt-8 grid grid-cols-2 sm:grid-cols-3 gap-4 max-w-3xl mx-auto"
-        aria-label="Courses"
-      ></nav>
+    </div>
+    <header class="hero" id="top">
+      <div>
+        <h1><span>Study Hub!</span></h1>
+        <p>
+          Semester 2, first term. Find your notes, guides, quizzes, and revision
+          pages, then keep track as you go.
+        </p>
+        <div class="stats" aria-live="polite">
+          <span class="stat" id="resourceStat"></span
+          ><span class="stat" id="progressStat"></span>
+        </div>
+      </div>
+      <aside class="hero-card">
+        <strong>🎯 Your next study move</strong>
+        <p id="nextStep" style="margin: 8px 0 0">
+          Pick a course to get started.
+        </p>
+      </aside>
     </header>
-
-    <main id="courses" class="px-4 pb-16 max-w-5xl mx-auto space-y-10"></main>
-
-    <footer
-      class="px-4 pb-10 text-center font-semibold"
-      style="color: var(--muted)"
-    >
-      Made for studying. Every card opens the page in Notion.
+    <section class="toolbar" aria-label="Find study resources">
+      <div class="controls">
+        <label class="sr-only" for="search">Search courses and resources</label
+        ><input
+          class="searchbox"
+          id="search"
+          type="search"
+          placeholder="Search notes, topics, courses…"
+          autocomplete="off"
+        /><label class="sr-only" for="courseSelect">Filter by course</label
+        ><select class="selectbox" id="courseSelect">
+          <option value="all">All courses</option></select
+        ><label class="sr-only" for="sortSelect">Sort resources</label
+        ><select class="selectbox" id="sortSelect">
+          <option value="course">Course order</option>
+          <option value="title">Title A–Z</option>
+          <option value="type">Resource type</option>
+        </select>
+      </div>
+      <div
+        class="filters"
+        id="typeFilters"
+        role="group"
+        aria-label="Filter by resource type"
+      ></div>
+    </section>
+    <nav class="course-nav" id="courseNav" aria-label="Jump to a course"></nav>
+    <main class="main" id="main">
+      <div id="courses"></div>
+      <div class="empty" id="emptyState" role="status">
+        No resources match that search. Try another word or filter.
+      </div>
+    </main>
+    <footer class="footer">
+      Made for studying. Resource links open in Notion. Progress is saved on
+      this device.
     </footer>
-
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <script>
       const COURSES = [
         {
@@ -434,6 +819,8 @@
         },
       ];
 
+      const STORAGE_KEY = "study-hub-progress-v1";
+      const THEME_KEY = "study-hub-theme";
       const tilt = [
         "-1.5deg",
         "1.2deg",
@@ -442,44 +829,221 @@
         "-1.1deg",
         "0.9deg",
       ];
-      const tiles = document.getElementById("tiles");
-      const main = document.getElementById("courses");
-
-      COURSES.forEach((c, i) => {
-        const a = document.createElement("a");
-        a.href = "#" + c.id;
-        a.className = "pop-sm press block px-3 py-4 text-[#1b1b2f]";
-        a.style.cssText = `background:${c.color};transform:rotate(${tilt[i]})`;
-        a.innerHTML = `<span class="block text-4xl" aria-hidden="true">${c.emoji}</span>
-    <span class="bangers block text-2xl mt-1">${c.name}</span>
-    <span class="block text-sm font-semibold">${c.items.length} ${c.items.length === 1 ? "page" : "pages"}</span>`;
-        tiles.appendChild(a);
-
-        const s = document.createElement("section");
-        s.id = c.id;
-        s.setAttribute("aria-labelledby", c.id + "-h");
-        s.innerHTML = `
-    <div class="pop p-5 sm:p-7" style="background:${c.color}">
-      <div class="flex flex-wrap items-center justify-between gap-3 mb-5 text-[#1b1b2f]">
-        <h2 id="${c.id}-h" class="bangers text-4xl sm:text-5xl"><span aria-hidden="true">${c.emoji}</span> ${c.name}</h2>
-        <a href="${c.url}" target="_blank" rel="noopener noreferrer" class="pop-sm press bg-white text-[#1b1b2f] px-4 py-2 font-bold">Open in Notion</a>
-      </div>
-      <ul class="grid gap-4 sm:grid-cols-2">
-        ${c.items
-          .map(
-            (it) => `
-          <li>
-            <a href="${it.u}" target="_blank" rel="noopener noreferrer" class="card pop-sm press block p-4 h-full">
-              <span class="inline-block text-sm font-bold px-3 py-1 rounded-full border-2 border-[#1b1b2f] text-[#1b1b2f]" style="background:var(--yellow)">${it.k}</span>
-              <span class="block mt-2 text-lg font-semibold leading-snug">${it.t}</span>
-            </a>
-          </li>`,
+      const $ = (id) => document.getElementById(id),
+        main = $("courses"),
+        nav = $("courseNav"),
+        courseSelect = $("courseSelect"),
+        search = $("search"),
+        typeFilters = $("typeFilters");
+      let completed = readProgress(),
+        activeType = "all";
+      function readProgress() {
+        try {
+          return new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"));
+        } catch {
+          return new Set();
+        }
+      }
+      function safeSave() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify([...completed]));
+        } catch {
+          toast("Progress could not be saved in this browser.");
+        }
+      }
+      function el(tag, cls, text) {
+        const n = document.createElement(tag);
+        if (cls) n.className = cls;
+        if (text !== undefined) n.textContent = text;
+        return n;
+      }
+      function link(href, label, cls) {
+        const a = el("a", cls, label);
+        a.href = href;
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        return a;
+      }
+      function render() {
+        const selectedCourse = courseSelect.value || "all";
+        main.replaceChildren();
+        nav.replaceChildren();
+        courseSelect.replaceChildren(new Option("All courses", "all"));
+        const types = [
+          ...new Set(COURSES.flatMap((c) => c.items.map((i) => i.k))),
+        ].sort();
+        typeFilters.replaceChildren();
+        [["all", "All types"], ...types.map((t) => [t, t])].forEach(
+          ([v, label]) => {
+            const b = el("button", "filter", label);
+            b.type = "button";
+            b.setAttribute("aria-pressed", String(activeType === v));
+            b.addEventListener("click", () => {
+              activeType = v;
+              render();
+            });
+            typeFilters.append(b);
+          },
+        );
+        const q = search.value.trim().toLocaleLowerCase();
+        let visibleCount = 0;
+        COURSES.forEach((c, i) => {
+          const filtered = c.items
+            .map((it, index) => ({ it, index }))
+            .filter(
+              ({ it }) =>
+                (activeType === "all" || it.k === activeType) &&
+                (!q ||
+                  (c.name + " " + it.t + " " + it.k)
+                    .toLocaleLowerCase()
+                    .includes(q)),
+            );
+          if (
+            !filtered.length ||
+            (selectedCourse !== "all" && selectedCourse !== c.id)
           )
-          .join("")}
-      </ul>
-    </div>`;
-        main.appendChild(s);
+            return;
+          visibleCount += filtered.length;
+          const jump = el("a", "course-link");
+          jump.href = "#" + c.id;
+          jump.style.setProperty("--course", c.color);
+          const emoji = el("span", "emoji", c.emoji);
+          emoji.setAttribute("aria-hidden", "true");
+          jump.append(emoji, el("span", "cname", c.name));
+          const small = el(
+            "small",
+            "",
+            `${filtered.length} of ${c.items.length} resources`,
+          );
+          jump.append(small);
+          nav.append(jump);
+          courseSelect.add(new Option(c.name, c.id));
+          if (selectedCourse === c.id) courseSelect.value = selectedCourse;
+          const sec = el("section", "course");
+          sec.id = c.id;
+          sec.style.setProperty("--course", c.color);
+          sec.setAttribute("aria-labelledby", c.id + "-h");
+          const head = el("div", "course-head"),
+            titleWrap = el("div"),
+            h = el("h2", "", `${c.emoji} ${c.name}`);
+          h.id = c.id + "-h";
+          titleWrap.append(h);
+          const doneCount = c.items.filter((it) => completed.has(it.u)).length;
+          titleWrap.append(
+            el("div", "course-meta", `${doneCount}/${c.items.length} complete`),
+          );
+          const open = link(c.url, "Open course in Notion ↗", "btn");
+          open.style.background = "var(--paper)";
+          head.append(titleWrap, open);
+          sec.append(head);
+          const ul = el("div", "resource-grid");
+          filtered
+            .sort((a, b) => {
+              const mode = $("sortSelect").value;
+              return mode === "title"
+                ? a.it.t.localeCompare(b.it.t)
+                : mode === "type"
+                  ? a.it.k.localeCompare(b.it.k) || a.index - b.index
+                  : a.index - b.index;
+            })
+            .forEach(({ it, index }) => {
+              const card = el(
+                "article",
+                "resource" + (completed.has(it.u) ? " done" : ""),
+              );
+              const check = el("input", "check");
+              check.type = "checkbox";
+              check.checked = completed.has(it.u);
+              check.setAttribute(
+                "aria-label",
+                `Mark ${it.t} ${check.checked ? "incomplete" : "complete"}`,
+              );
+              check.addEventListener("change", () => {
+                if (check.checked) completed.add(it.u);
+                else completed.delete(it.u);
+                safeSave();
+                render();
+                updateStats();
+              });
+              const title = el("div", "res-title", it.t);
+              const row = el("div", "res-actions");
+              row.append(
+                el("span", "tag", it.k),
+                link(it.u, "Open resource ↗", "open-link"),
+              );
+              card.append(check, title, row);
+              ul.append(card);
+            });
+          sec.append(ul);
+          main.append(sec);
+        });
+        $("emptyState").classList.toggle("show", visibleCount === 0);
+        updateStats();
+      }
+      function updateStats() {
+        const total = COURSES.reduce((n, c) => n + c.items.length, 0),
+          done = COURSES.reduce(
+            (n, c) => n + c.items.filter((it) => completed.has(it.u)).length,
+            0,
+          );
+        $("resourceStat").textContent =
+          `${total} resources · ${COURSES.length} courses`;
+        $("progressStat").textContent = `${done}/${total} completed`;
+        const next = COURSES.flatMap((c) =>
+          c.items.map((it) => ({ c, it })),
+        ).find((x) => !completed.has(x.it.u));
+        $("nextStep").textContent = next
+          ? `${next.c.emoji} ${next.c.name}: ${next.it.t}`
+          : "All caught up! Your study list is complete. 🎉";
+      }
+      let toastTimer;
+      function toast(message) {
+        const box = $("toast");
+        box.textContent = message;
+        box.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => box.classList.remove("show"), 2400);
+      }
+      search.addEventListener("input", render);
+      courseSelect.addEventListener("change", () => {
+        render();
+        const id = courseSelect.value;
+        if (id !== "all") {
+          history.replaceState(null, "", "#" + id);
+          $(id)?.scrollIntoView({
+            behavior: matchMedia("(prefers-reduced-motion: reduce)").matches
+              ? "auto"
+              : "smooth",
+          });
+        }
       });
+      $("sortSelect").addEventListener("change", render);
+      $("resetProgress").addEventListener("click", () => {
+        if (!completed.size) {
+          toast("No progress to reset yet.");
+          return;
+        }
+        completed.clear();
+        safeSave();
+        render();
+        toast("Study progress reset.");
+      });
+      function setTheme(theme) {
+        document.documentElement.dataset.theme = theme;
+        try {
+          localStorage.setItem(THEME_KEY, theme);
+        } catch {}
+      }
+      try {
+        const savedTheme = localStorage.getItem(THEME_KEY);
+        if (savedTheme) setTheme(savedTheme);
+      } catch {}
+      $("themeToggle").addEventListener("click", () =>
+        setTheme(
+          document.documentElement.dataset.theme === "dark" ? "light" : "dark",
+        ),
+      );
+      render();
     </script>
   </body>
 </html>
